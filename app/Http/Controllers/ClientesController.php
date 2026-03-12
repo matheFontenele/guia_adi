@@ -14,7 +14,7 @@ class ClientesController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where('nome', 'like', "%{$search}%")
-                  ->orWhere('cnpj', 'like', "%{$search}%");
+                ->orWhere('cnpj', 'like', "%{$search}%");
         }
 
         $clientes = $query->orderBy('nome')->get();
@@ -36,6 +36,39 @@ class ClientesController extends Controller
         Clientes::create($data);
 
         return back()->with('success', 'Cliente cadastrado com sucesso!');
+    }
+
+    //Metedo para criar novo cliente
+    public function create()
+    {
+        return view('clientes.create');
+    }
+
+    // Adicione o método edit
+    public function edit($id)
+    {
+        $cliente = Clientes::findOrFail($id);
+        return view('clientes.edit', compact('cliente'));
+    }
+
+    //Metodo para atualizar dados de clientes (editar)
+    public function update(Request $request, $id)
+    {
+        $cliente = Clientes::findOrFail($id);
+
+        $data = $request->validate([
+            'nome'     => 'required|string|max:255',
+            'cnpj'     => 'required|string|unique:clientes,cnpj,' . $id,
+            'estado'   => 'required|string|max:2',
+            'cidade'   => 'required|string|max:255',
+            'endereco' => 'required|string|max:255',
+            'contrato' => 'required|in:Alucom,Moreia,ZapLok',
+            'sla'      => 'nullable|array',
+        ]);
+
+        $cliente->update($data);
+
+        return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
     public function show($id)
