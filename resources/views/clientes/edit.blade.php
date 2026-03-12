@@ -46,14 +46,16 @@
                     <input type="text" name="endereco" value="{{ $cliente->endereco }}" required class="w-full rounded-xl border-slate-200 bg-slate-50 p-3 outline-none focus:ring-2 focus:ring-red-500">
                 </div>
 
-                {{-- Estado e Cidade --}}
-                <div>
-                    <label class="block text-xs font-black text-slate-500 uppercase mb-2">UF</label>
-                    <input type="text" name="estado" value="{{ $cliente->estado }}" required maxlength="2" class="w-full rounded-xl border-slate-200 bg-slate-50 p-3 outline-none focus:ring-2 focus:ring-red-500 text-center uppercase">
-                </div>
-                <div>
-                    <label class="block text-xs font-black text-slate-500 uppercase mb-2">Cidade</label>
-                    <input type="text" name="cidade" value="{{ $cliente->cidade }}" required class="w-full rounded-xl border-slate-200 bg-slate-50 p-3 outline-none focus:ring-2 focus:ring-red-500">
+                {{-- Localização --}}
+                <div class="grid grid-cols-3 gap-4 md:col-span-2">
+                    <div class="col-span-1">
+                        <label class="block text-xs font-black text-slate-500 uppercase mb-2">UF</label>
+                        <input type="text" name="estado" value="{{ $cliente->estado }}" required maxlength="2" class="w-full rounded-xl border-slate-200 bg-slate-50 p-3 outline-none focus:ring-2 focus:ring-red-500 text-center uppercase">
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-xs font-black text-slate-500 uppercase mb-2">Cidade</label>
+                        <input type="text" name="cidade" value="{{ $cliente->cidade }}" required class="w-full rounded-xl border-slate-200 bg-slate-50 p-3 outline-none focus:ring-2 focus:ring-red-500">
+                    </div>
                 </div>
             </div>
 
@@ -71,6 +73,15 @@
                         <input type="number" name="sla[{{ $label }}]" value="{{ $cliente->sla[$label] ?? $default }}" class="w-full rounded-lg border-slate-200 bg-slate-50 p-2 outline-none focus:ring-2 focus:ring-red-500 text-sm">
                     </div>
                     @endforeach
+                </div>
+
+                {{-- Tipo de Insumo no Edit --}}
+                <div class="mt-4">
+                    <label class="block text-[10px] font-black text-slate-400 uppercase mb-1">Tipo de Insumo</label>
+                    <select name="sla[Tipo]" class="w-full md:w-1/3 rounded-lg border-slate-200 bg-slate-50 p-2 text-sm outline-none focus:ring-2 focus:ring-red-500 font-bold">
+                        <option value="Compativel" {{ ($cliente->sla['Tipo'] ?? '') == 'Compativel' ? 'selected' : '' }}>Compatível</option>
+                        <option value="Original" {{ ($cliente->sla['Tipo'] ?? '') == 'Original' ? 'selected' : '' }}>Original</option>
+                    </select>
                 </div>
             </div>
 
