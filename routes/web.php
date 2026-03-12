@@ -9,6 +9,7 @@ Route::get('/', function () {
 });
 
 // Guia ADI
+Route::resource('guia-adi', GuiaAdiController::class);
 Route::prefix('guia')->group(function () {
     Route::get('/', [GuiaAdiController::class, 'index'])->name('guia-adi.index');
     Route::get('/novo', [GuiaAdiController::class, 'create'])->name('guia-adi.create');
