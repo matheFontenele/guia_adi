@@ -65,4 +65,30 @@ class GuiaAdiController extends Controller
 
         return view('guia.show', compact('guiaAdi'));
     }
+
+    //Metedo para editar
+    public function edit($id)
+    {
+        $guiaAdi = GuiaAdi::findOrFail($id);
+        return view('guia.edit', compact('guiaAdi'));
+    }
+
+    //Metodo para salvar alterações
+    public function update(Request $request, $id)
+    {
+        $guiaAdi = GuiaAdi::findOrFail($id);
+        
+        // Validação básica
+        $data = $request->validate([
+            'fabricante' => 'required',
+            'marca_modelo' => 'required',
+            'toner' => 'required',
+            // adicione os outros campos aqui...
+        ]);
+
+        $guiaAdi->update($data);
+
+        return redirect()->route('guia-adi.show', $id)
+                         ->with('success', 'Equipamento atualizado com sucesso!');
+    }
 }
