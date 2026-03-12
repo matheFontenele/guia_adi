@@ -21,13 +21,13 @@
 
     <aside class="w-64 bg-slate-900 min-h-screen text-slate-300 flex flex-col shadow-xl">
         <div class="p-6 text-white font-bold text-2xl border-b border-slate-800 flex items-center gap-2">
-            <i class="ph ph-package text-red-400"></i> Guia Alucom
+            <i class="ph ph-package text-red-400"></i> Guia ADI
         </div>
 
         <nav class="flex-1 p-4 space-y-2">
             <a href="{{ route('guia-adi.index') }}"
                 class="flex items-center gap-3 p-3 rounded-lg transition {{ request()->routeIs('guia-adi.*') ? 'bg-red-600 text-white shadow-lg shadow-red-900/20' : 'hover:bg-slate-800 hover:text-white text-slate-300' }}">
-                <i class="ph ph-printer text-xl"></i> Guia ADI
+                <i class="ph ph-printer text-xl"></i> Guia Impressoras
             </a>
 
             <a href="{{ route('clientes.index') }}"
