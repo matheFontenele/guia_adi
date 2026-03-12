@@ -18,15 +18,15 @@
         <div class="md:col-span-1">
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 aspect-square flex items-center justify-center">
                 @if($guiaAdi->foto)
-                    <img src="{{ asset('storage/' . $guiaAdi->foto) }}" alt="{{ $guiaAdi->marca_modelo }}" class="max-w-full h-auto">
+                <img src="{{ asset('storage/' . $guiaAdi->foto) }}" alt="{{ $guiaAdi->marca_modelo }}" class="max-w-full h-auto">
                 @else
-                    <div class="text-center">
-                        <i class="ph ph-printer text-6xl text-slate-200"></i>
-                        <p class="text-[10px] font-bold text-slate-400 uppercase mt-2">Sem imagem</p>
-                    </div>
+                <div class="text-center">
+                    <i class="ph ph-printer text-6xl text-slate-200"></i>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase mt-2">Sem imagem</p>
+                </div>
                 @endif
             </div>
-            
+
             {{-- Card Rápido de Insumo --}}
             <div class="mt-4 bg-slate-900 rounded-3xl p-6 text-white">
                 <p class="text-[10px] font-black uppercase text-slate-400 mb-4 tracking-widest">Insumo Principal</p>
@@ -48,7 +48,7 @@
                 <div class="bg-slate-50 px-8 py-4 border-b border-slate-100">
                     <h3 class="font-black text-slate-700 uppercase text-xs tracking-widest">Especificações Completas</h3>
                 </div>
-                
+
                 <div class="p-8 grid grid-cols-2 gap-y-6 gap-x-12">
                     <div>
                         <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Velocidade</p>
@@ -77,12 +77,19 @@
                 </div>
 
                 <div class="px-8 pb-8">
-                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Funções</p>
-                     <div class="flex flex-wrap gap-2">
-                        @foreach($guiaAdi->funcoes as $funcao)
-                            <span class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase">{{ $funcao }}</span>
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Funções</p>
+                    <div class="flex flex-wrap gap-2">
+                        @php
+                        // Se funcoes for string, transforma em array. Se já for array (json), mantém.
+                        $listaFuncoes = is_array($guiaAdi->funcoes) ? $guiaAdi->funcoes : explode(',', $guiaAdi->funcoes);
+                        @endphp
+
+                        @foreach($listaFuncoes as $funcao)
+                        <span class="px-3 py-1 bg-red-50 text-red-600 rounded-full text-[10px] font-black uppercase">
+                            {{ trim($funcao) }}
+                        </span>
                         @endforeach
-                     </div>
+                    </div>
                 </div>
             </div>
 
