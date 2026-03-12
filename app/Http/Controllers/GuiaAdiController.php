@@ -14,10 +14,10 @@ class GuiaAdiController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('marca_modelo', 'like', "%{$search}%")
-                  ->orWhere('fabricante', 'like', "%{$search}%")
-                  ->orWhere('toner', 'like', "%{$search}%");
+                    ->orWhere('fabricante', 'like', "%{$search}%")
+                    ->orWhere('toner', 'like', "%{$search}%");
             });
         }
 
@@ -57,7 +57,7 @@ class GuiaAdiController extends Controller
     public function show($id)
     {
         $guiaAdi = GuiaAdi::findOrFail($id);
-        
+
         // Garante que funcoes seja um array para o @foreach não quebrar na view
         if (!$guiaAdi->funcoes) {
             $guiaAdi->funcoes = [];
@@ -77,18 +77,27 @@ class GuiaAdiController extends Controller
     public function update(Request $request, $id)
     {
         $guiaAdi = GuiaAdi::findOrFail($id);
-        
-        // Validação básica
         $data = $request->validate([
-            'fabricante' => 'required',
-            'marca_modelo' => 'required',
-            'toner' => 'required',
-            // adicione os outros campos aqui...
+            'fabricante'   => 'required|string',
+            'marca_modelo' => 'required|string',
+            'toner'        => 'required|string',
+            'ppm'          => 'nullable|string',
+            'rendimento'   => 'nullable|string',
+            'voltagem'     => 'nullable|string',
+            'duplex'       => 'nullable|string',
+            'obs'          => 'nullable|string',
+            'foto'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // 2MB max
         ]);
+
+        if ($request->hasFile('foto')) {
+
+            $path = $request->file('foto')->store('guias', 'public');
+            $data['foto'] = $path;
+        }
 
         $guiaAdi->update($data);
 
-        return redirect()->route('guia-adi.show', $id)
-                         ->with('success', 'Equipamento atualizado com sucesso!');
+        return redirect()->route('guia-adi.show', $guiaAdi->id)
+            ->with('success', 'Equipamento atualizado com sucesso!');
     }
 }
