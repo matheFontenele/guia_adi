@@ -11,12 +11,26 @@ class TecnicosController extends Controller
     {
         $query = Tecnicos::query();
 
+        // Filtro por Nome ou CNPJ
         if ($request->filled('search')) {
-            $query->where('nome', 'like', "%{$request->search}%")
-                ->orWhere('regiao', 'like', "%{$request->search}%");
+            $query->where(function ($q) use ($request) {
+                $q->where('nome', 'like', "%{$request->search}%")
+                    ->orWhere('cnpj', 'like', "%{$request->search}%");
+            });
+        }
+
+        // Filtro por Região
+        if ($request->filled('regiao')) {
+            $query->where('regiao', 'like', "%{$request->regiao}%");
+        }
+
+        // Filtro por Especialidade (Tipo)
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->tipo);
         }
 
         $tecnicos = $query->orderBy('nome')->get();
+
         return view('tecnicos.index', compact('tecnicos'));
     }
 
