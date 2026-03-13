@@ -11,7 +11,51 @@
             <i class="ph ph-plus-circle text-lg"></i> CADASTRAR TÉCNICO
         </a>
     </div>
+    {{-- Barra de Filtros --}}
+    <div class="bg-white rounded-[24px] p-6 shadow-sm border border-slate-200 mb-8">
+        <form action="{{ route('tecnicos.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
 
+            {{-- Busca por Texto --}}
+            <div>
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest">Busca Geral</label>
+                <div class="relative">
+                    <input type="text" name="search" value="{{ request('search') }}" placeholder="Nome ou CNPJ..."
+                        class="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 pl-10 font-bold outline-none focus:ring-2 focus:ring-red-500 text-sm transition-all">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="ph ph-magnifying-glass font-bold"></i>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Filtro de Região --}}
+            <div>
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest">Região</label>
+                <input type="text" name="regiao" value="{{ request('regiao') }}" placeholder="Ex: Belém..."
+                    class="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 font-bold outline-none focus:ring-2 focus:ring-red-500 text-sm">
+            </div>
+
+            {{-- Filtro de Especialidade --}}
+            <div>
+                <label class="block text-[10px] font-black text-slate-400 uppercase mb-2 tracking-widest">Especialidade</label>
+                <select name="tipo" class="w-full rounded-xl border-slate-200 bg-slate-50 p-2.5 font-bold outline-none focus:ring-2 focus:ring-red-500 text-sm">
+                    <option value="">Todas</option>
+                    <option value="Impressoras" {{ request('tipo') == 'Impressoras' ? 'selected' : '' }}>Impressoras</option>
+                    <option value="Informatica" {{ request('tipo') == 'Informatica' ? 'selected' : '' }}>Informática</option>
+                    <option value="Ambos" {{ request('tipo') == 'Ambos' ? 'selected' : '' }}>Ambos</option>
+                </select>
+            </div>
+
+            {{-- Botões --}}
+            <div class="flex gap-2">
+                <button type="submit" class="flex-1 bg-slate-800 text-white p-2.5 rounded-xl font-black hover:bg-slate-700 transition-all text-xs uppercase tracking-widest">
+                    Filtrar
+                </button>
+                <a href="{{ route('tecnicos.index') }}" class="bg-slate-100 text-slate-400 p-2.5 rounded-xl hover:bg-slate-200 transition-all" title="Limpar Filtros">
+                    <i class="ph ph-arrow-counter-clockwise font-bold"></i>
+                </a>
+            </div>
+        </form>
+    </div>
     <div class="bg-white rounded-[32px] shadow-sm border border-slate-200 overflow-hidden">
         <table class="w-full text-left border-collapse">
             <thead class="bg-slate-50 border-b border-slate-100">
