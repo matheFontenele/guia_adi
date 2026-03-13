@@ -11,12 +11,24 @@ class ClientesController extends Controller
     //Função principal
     public function index(Request $request)
     {
-        $query = Clientes::query()->whereNull('parent_id'); // Mostra apenas os "Pais" (Ministérios)
+        $query = Clientes::query();
 
+        // Busca por Nome ou CNPJ
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where('nome', 'like', "%{$search}%")
-                ->orWhere('cnpj', 'like', "%{$search}%");
+            $query->where(function ($q) use ($request) {
+                $q->where('nome', 'like', "%{$request->search}%")
+                    ->orWhere('cnpj', 'like', "%{$request->search}%");
+            });
+        }
+
+        // Filtro por Estado (Localização)
+        if ($request->filled('estado')) {
+            $query->where('estado', $request->estado);
+        }
+
+        // Filtro por Contrato
+        if ($request->filled('contrato')) {
+            $query->where('contrato', $request->contrato);
         }
 
         $clientes = $query->orderBy('nome')->get();
@@ -82,16 +94,28 @@ class ClientesController extends Controller
         return redirect()->route('clientes.index')->with('success', 'Cliente atualizado com sucesso!');
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        // Busca o cliente principal
         $cliente = Clientes::findOrFail($id);
-        return view('clientes.show', compact('cliente'));
-    }
 
-    public function destroy($id)
-    {
-        $cliente = Clientes::findOrFail($id);
-        $cliente->delete();
-        return redirect()->route('clientes.index')->with('success', 'Cliente removido!');
+        // Inicia a query das unidades vinculadas (relacionamento)
+        $queryUnidades = $cliente->unidades();
+
+        // Aplica o filtro de busca de região/nome se existir
+        if ($request->filled('search_unidade')) {
+            $search = $request->search_unidade;
+            $queryUnidades->where(function ($q) use ($search) {
+                $q->where('nome', 'like', "%{$search}%")
+                    ->orWhere('cidade', 'like', "%{$search}%")
+                    ->orWhere('estado', 'like', "%{$search}%");
+            });
+        }
+
+        // Pega os resultados
+        $unidades = $queryUnidades->get();
+
+        // Envia tanto o $cliente quanto as $unidades para a view
+        return view('clientes.show', compact('cliente', 'unidades'));
     }
 }
