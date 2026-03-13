@@ -47,4 +47,41 @@
         </div>
     </div>
 </div>
+@if($cliente->tipo == 'ministerio')
+<div class="mt-8">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-black text-slate-800 tracking-tight">Unidades Vinculadas</h2>
+        <a href="{{ route('clientes.create', ['parent_id' => $cliente->id]) }}" class="bg-slate-800 text-white text-xs px-4 py-2 rounded-lg font-bold hover:bg-slate-700 transition-all">
+            + Adicionar Unidade
+        </a>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead class="bg-slate-50 border-b border-slate-100">
+                <tr>
+                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase">Nome da Unidade</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase">Cidade/UF</th>
+                    <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase text-right">Ações</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @forelse($cliente->unidades as $unidade)
+                <tr class="hover:bg-slate-50 transition-colors">
+                    <td class="px-6 py-4 font-bold text-slate-700">{{ $unidade->nome }}</td>
+                    <td class="px-6 py-4 text-sm text-slate-500">{{ $unidade->cidade }} - {{ $unidade->estado }}</td>
+                    <td class="px-6 py-4 text-right">
+                        <a href="{{ route('clientes.show', $unidade->id) }}" class="text-red-600 font-black text-xs uppercase hover:underline">Ver Detalhes</a>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="3" class="px-6 py-8 text-center text-slate-400 italic text-sm">Nenhuma unidade cadastrada para este ministério.</td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+@endif
 @endsection

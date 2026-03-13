@@ -19,8 +19,41 @@
 
         <form action="{{ route('clientes.store') }}" method="POST" class="p-8 space-y-6">
             @csrf
-            
+
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {{-- Ministerio/Secretaria --}}
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label class="block text-xs font-black text-slate-500 uppercase mb-2">Tipo de Cadastro</label>
+                        <select name="tipo" id="tipo_cliente" class="w-full rounded-xl border-slate-200 bg-white p-3 font-bold outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="ministerio">Novo Ministério / Secretaria</option>
+                            <option value="unidade" {{ request('parent_id') ? 'selected' : '' }}>Nova Unidade (Filial)</option>
+                        </select>
+                    </div>
+
+                    <div id="div_parent_id" class="{{ request('parent_id') ? '' : 'hidden' }}">
+                        <label class="block text-xs font-black text-slate-500 uppercase mb-2">Vincular ao Ministério</label>
+                        <select name="parent_id" class="w-full rounded-xl border-slate-200 bg-white p-3 font-bold outline-none focus:ring-2 focus:ring-red-500">
+                            <option value="">Selecione o Ministério Pai...</option>
+                            @foreach($ministerios as $m)
+                            <option value="{{ $m->id }}" {{ request('parent_id') == $m->id ? 'selected' : '' }}>{{ $m->nome }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <script>
+                    // Lógica para mostrar/esconder a seleção de ministério pai
+                    document.getElementById('tipo_cliente').addEventListener('change', function() {
+                        const divParent = document.getElementById('div_parent_id');
+                        if (this.value === 'unidade') {
+                            divParent.classList.remove('hidden');
+                        } else {
+                            divParent.classList.add('hidden');
+                        }
+                    });
+                </script>
+
                 {{-- Nome / Razão Social --}}
                 <div class="md:col-span-2">
                     <label class="block text-xs font-black text-slate-500 uppercase mb-2">Razão Social / Nome</label>

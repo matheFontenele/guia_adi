@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 
 class ClientesController extends Controller
 {
+
+    //Função principal
     public function index(Request $request)
     {
-        $query = Clientes::query();
+        $query = Clientes::query()->whereNull('parent_id'); // Mostra apenas os "Pais" (Ministérios)
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -21,27 +23,36 @@ class ClientesController extends Controller
         return view('clientes.index', compact('clientes'));
     }
 
+    //Função para mostrar os clientes 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nome'     => 'required|string|max:255',
-            'cnpj'     => 'required|string|unique:clientes,cnpj',
-            'estado'   => 'required|string|max:2',
-            'cidade'   => 'required|string|max:255',
-            'endereco' => 'required|string|max:255',
-            'contrato' => 'required|in:Alucom,Moreia,ZapLok',
-            'sla'      => 'nullable|array',
+            'nome'      => 'required|string|max:255',
+            'cnpj'      => 'required|string|unique:clientes,cnpj',
+            'estado'    => 'required|string|max:2',
+            'cidade'    => 'required|string|max:255',
+            'endereco'  => 'required|string|max:255',
+            'contrato'  => 'required|in:Alucom,Moreia,ZapLok',
+            'sla'       => 'nullable|array',
+            'parent_id' => 'nullable|exists:clientes,id', // Valida se o pai existe
+            'tipo'      => 'required|in:ministerio,unidade',
         ]);
 
         Clientes::create($data);
 
-        return back()->with('success', 'Cliente cadastrado com sucesso!');
+        // Se for unidade, volta para o ministério pai, se não, volta para a lista
+        if ($request->filled('parent_id')) {
+            return redirect()->route('clientes.show', $request->parent_id)->with('success', 'Unidade cadastrada!');
+        }
+
+        return redirect()->route('clientes.index')->with('success', 'Ministério cadastrado!');
     }
 
     //Metedo para criar novo cliente
     public function create()
     {
-        return view('clientes.create');
+        $ministerios = Clientes::whereNull('parent_id')->get();
+        return view('clientes.create', compact('ministerios'));
     }
 
     // Adicione o método edit
