@@ -21,15 +21,11 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        //Criação de Equipamentos testes
+        //Criação de testes
         $this->call([
             EquipamentoSeeder::class,
-        ]);
-
-        //Criação de Clientes teste
-        $this->call([
-            EquipamentoSeeder::class,
-            ClientesSeeder::class, // Adicione esta linha
+            ClientesSeeder::class,
+            TecnicosSeeder::class,
         ]);
     }
 }

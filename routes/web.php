@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\GuiaAdiController;
 use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\TecnicosController;
 
 Route::get('/', function () {
     return redirect()->route('guia-adi.index');
@@ -19,3 +20,6 @@ Route::prefix('guia')->group(function () {
 
 // Clientes
 Route::resource('clientes', ClientesController::class);
+
+//Tecnicos
+Route::resource('tecnicos', TecnicosController::class);
